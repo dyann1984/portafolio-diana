@@ -389,9 +389,161 @@ body.edit-mode .edit-tip{display:block}
 /* RESPONSIVE */
 @media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:3rem}.hero-photo{order:-1;justify-content:center}}
 @media(max-width:640px){.tb-nav,.btn-outline{display:none}.hero{padding:3rem 1.2rem 2rem}.fr{grid-template-columns:1fr}}
+
+/* ═══ HERO NAME MEGA STYLE ═══ */
+.hero-name {
+  font-size: clamp(3.5rem, 7.5vw, 6.5rem) !important;
+  font-weight: 900 !important;
+  line-height: 0.9 !important;
+  letter-spacing: -0.04em !important;
+  margin-bottom: 1rem !important;
+}
+.name-line {
+  display: block;
+  overflow: hidden;
+}
+.name-word {
+  display: inline-block;
+  animation: nameSlide 0.8s cubic-bezier(0.16,1,0.3,1) both;
+}
+.name-word:nth-child(1){ animation-delay:.3s }
+.name-word:nth-child(2){ animation-delay:.5s }
+.name-word:nth-child(3){ animation-delay:.7s }
+@keyframes nameSlide {
+  from { opacity:0; transform: translateY(100%) skewY(5deg); }
+  to   { opacity:1; transform: translateY(0)   skewY(0deg); }
+}
+.name-grad {
+  background: linear-gradient(135deg, #00D4FF 0%, #00FFEE 30%, #9D5CFF 70%, #FF3D7F 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  filter: drop-shadow(0 0 40px rgba(0,200,255,.5)) !important;
+  animation: nameGlow 3s ease-in-out infinite !important;
+  background-size: 200% 200% !important;
+}
+@keyframes nameGlow {
+  0%,100% { background-position: 0% 50%; filter: drop-shadow(0 0 30px rgba(0,200,255,.4)); }
+  50% { background-position: 100% 50%; filter: drop-shadow(0 0 60px rgba(157,92,255,.6)); }
+}
+/* GLITCH */
+.name-glitch {
+  position: relative;
+  color: #fff;
+  animation: glitchMain 6s infinite;
+}
+.name-glitch::before,.name-glitch::after {
+  content: attr(data-text);
+  position: absolute; top:0; left:0; width:100%;
+  background: inherit; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.name-glitch::before {
+  color: var(--cyan); left: 2px;
+  animation: glitchA 6s infinite;
+  clip-path: polygon(0 0,100% 0,100% 45%,0 45%);
+}
+.name-glitch::after {
+  color: var(--purple); left: -2px;
+  animation: glitchB 6s infinite;
+  clip-path: polygon(0 55%,100% 55%,100% 100%,0 100%);
+}
+@keyframes glitchMain {
+  0%,94%,100% { transform: none; }
+  95% { transform: skewX(-1deg); }
+  96% { transform: skewX(1.5deg); }
+  97% { transform: none; }
+}
+@keyframes glitchA {
+  0%,94%,100% { transform: none; opacity:0; }
+  95% { transform: translate(-3px,1px); opacity:.8; }
+  96% { transform: translate(2px,-1px); opacity:.6; }
+  97% { opacity:0; }
+}
+@keyframes glitchB {
+  0%,94%,100% { transform: none; opacity:0; }
+  95% { transform: translate(3px,-1px); opacity:.7; }
+  96% { transform: translate(-2px,1px); opacity:.5; }
+  97% { opacity:0; }
+}
+
+/* ═══ METEORS ═══ */
+.meteor {
+  position: fixed; top:-20px; width:2px; background: linear-gradient(180deg, rgba(0,200,255,0), #00D4FF, rgba(157,92,255,0));
+  border-radius:2px; pointer-events:none; z-index:2; animation: meteorFall linear infinite;
+}
+@keyframes meteorFall {
+  from { transform: translateY(-20px) translateX(0); opacity:1; }
+  to   { transform: translateY(110vh) translateX(-60px); opacity:0; }
+}
+
+/* ═══ TYPING CURSOR ON ROLE ═══ */
+.hero-title::after {
+  content: '|';
+  color: var(--cyan);
+  animation: blink .7s step-end infinite;
+  margin-left: 2px;
+}
+@keyframes blink { 50% { opacity:0; } }
+
+/* ═══ NEON GLOW TOPBAR ═══ */
+.topbar::before {
+  content: '';
+  position: absolute; top:0; left:0; right:0; height:1px;
+  background: linear-gradient(90deg, transparent, var(--cyan), var(--purple), var(--cyan), transparent);
+  background-size: 200% 100%;
+  animation: topbarShine 4s linear infinite;
+}
+@keyframes topbarShine {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* ═══ SCROLL PROGRESS BAR ═══ */
+#progress-bar {
+  position:fixed;top:0;left:0;height:2px;z-index:600;
+  background: linear-gradient(90deg, var(--cyan), var(--purple), var(--pink));
+  width:0%; transition: width .05s;
+  box-shadow: 0 0 8px rgba(0,200,255,.6);
+}
+
+/* ═══ FLOATING CONTACT BUBBLE ═══ */
+.float-wa {
+  position:fixed;bottom:28px;right:28px;z-index:400;
+  width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,#00E676,#00C853);
+  display:flex;align-items:center;justify-content:center;
+  font-size:24px;text-decoration:none;
+  box-shadow:0 4px 20px rgba(0,230,118,.4);
+  animation:waFloat 3s ease-in-out infinite;
+  transition:transform .2s;
+}
+.float-wa:hover{transform:scale(1.1)}
+@keyframes waFloat {
+  0%,100% { transform:translateY(0); box-shadow:0 4px 20px rgba(0,230,118,.4); }
+  50% { transform:translateY(-6px); box-shadow:0 10px 30px rgba(0,230,118,.5); }
+}
+.float-wa-ring {
+  position:fixed;bottom:28px;right:28px;z-index:399;
+  width:52px;height:52px;border-radius:50%;
+  border:2px solid rgba(0,230,118,.5);
+  animation:waRing 2s ease-out infinite;
+}
+@keyframes waRing {
+  0% { transform:scale(1); opacity:.6; }
+  100% { transform:scale(2); opacity:0; }
+}
+
+/* ═══ SECTION REVEAL ═══ */
+.reveal { transition-timing-function: cubic-bezier(0.16,1,0.3,1) !important; }
+
 </style>
 </head>
 <body>
+
+<div id="progress-bar"></div>
+<a class="float-wa" href="https://wa.me/5256347880847" target="_blank" rel="noopener" title="WhatsApp">💬</a>
+<div class="float-wa-ring"></div>
+<div id="meteors-container"></div>
 
 <canvas id="cvs"></canvas>
 <div id="cursor-glow"></div>
@@ -425,8 +577,12 @@ body.edit-mode .edit-tip{display:block}
         <span class="ey-txt" data-editable="eyebrow">Especialista en Soporte Técnico &amp; IT</span>
       </div>
       <h1 class="hero-name">
-        <span data-editable="name1">Diana </span><span class="name-grad" data-editable="name2">López</span><br>
-        <span data-editable="name3">Aguilar</span>
+        <span class="name-line">
+          <span class="name-word" style="color:#fff" data-editable="name1">Diana&nbsp;</span><span class="name-word name-grad name-glitch" data-text="López" data-editable="name2">López</span>
+        </span>
+        <span class="name-line">
+          <span class="name-word" style="color:rgba(255,255,255,0.92)" data-editable="name3">Aguilar</span>
+        </span>
       </h1>
       <div class="hero-title" data-editable="title">Help Desk N1 · ATC · ITIL v4 · Soporte Remoto</div>
       <p class="hero-summary">
@@ -438,13 +594,13 @@ body.edit-mode .edit-tip{display:block}
           <span class="cl-icon">✉️</span>
           <span data-editable="email">dianalopez161184@gmail.com</span>
         </a>
-        <a class="cl-item wa" href="https://wa.me/5589496401" id="cl-wa" target="_blank">
+        <a class="cl-item wa" href="https://wa.me/5256347880847" id="cl-wa" target="_blank">
           <span class="cl-icon">💬</span>
-          <span data-editable="phone">(55) 8949-6401 · WhatsApp</span>
+          <span data-editable="phone">(56) 3547-8847 · WhatsApp</span>
         </a>
-        <a class="cl-item" href="tel:5634780847" id="cl-phone2">
+        <a class="cl-item" href="tel:5589496401" id="cl-phone2">
           <span class="cl-icon">📱</span>
-          <span data-editable="phone2">(56) 3547-8847</span>
+          <span data-editable="phone2">(55) 8949-6401</span>
         </a>
         <a class="cl-item" href="#" id="cl-loc">
           <span class="cl-icon">📍</span>
@@ -878,6 +1034,39 @@ function closeM(id){document.getElementById(id).classList.remove('open');pinBuf=
 document.querySelectorAll('.modal-ov').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)closeM(m.id)}));
 
 renderProjects();
+
+// ═══ SCROLL PROGRESS ═══
+window.addEventListener('scroll', () => {
+  const p = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+  document.getElementById('progress-bar').style.width = p + '%';
+});
+
+// ═══ METEORS ═══
+(function(){
+  const container = document.getElementById('meteors-container');
+  function makeMeteor(){
+    const m = document.createElement('div');
+    m.className = 'meteor';
+    const h = Math.floor(Math.random()*60)+20;
+    m.style.cssText = `height:${h}px;left:${Math.random()*100}vw;animation-duration:${Math.random()*3+2}s;animation-delay:${Math.random()*5}s;opacity:${Math.random()*.6+.2}`;
+    container.appendChild(m);
+    setTimeout(()=>m.remove(), 8000);
+  }
+  setInterval(makeMeteor, 600);
+  for(let i=0;i<5;i++) setTimeout(makeMeteor, i*400);
+})();
+
+// ═══ TYPING EFFECT ON ROLE ═══
+(function(){
+  const el = document.querySelector('.hero-title[data-editable="title"]') || document.querySelector('.hero-title');
+  if(!el) return;
+  const full = el.textContent;
+  el.textContent = '';
+  let i = 0;
+  const type = () => { if(i < full.length){ el.textContent += full[i++]; setTimeout(type, 40); } };
+  setTimeout(type, 1200);
+})();
+
 </script>
 </body>
 </html>
