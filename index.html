@@ -8,14 +8,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 :root{
   --c1:#00C8FF;--c2:#0055FF;--gold:#C9A227;--green:#00F0A0;--purple:#9055FF;
-  --glass:rgba(2,12,40,0.52);--glass2:rgba(0,8,30,0.72);
+  --glass:rgba(2,12,40,0.42);--glass2:rgba(0,8,30,0.60);
   --border:rgba(0,180,255,0.22);--border2:rgba(0,180,255,0.10);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{width:100%;height:100%;overflow:hidden;font-family:'Rajdhani',sans-serif;color:#E0F4FF;cursor:none}
 
 #bg-video{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
-#bg-ov{position:fixed;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,5,20,.6) 0%,rgba(0,8,30,.25) 50%,rgba(0,5,20,.75) 100%)}
+#bg-ov{position:fixed;inset:0;z-index:1;background:linear-gradient(180deg,rgba(0,5,20,.35) 0%,rgba(0,8,30,.12) 50%,rgba(0,5,20,.45) 100%)}
 #scanlines{position:fixed;inset:0;z-index:2;pointer-events:none;
   background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.055) 2px,rgba(0,0,0,.055) 4px)}
 
@@ -253,7 +253,7 @@ body.edit-mode [data-ed]:hover{background:rgba(201,162,39,.07)}
 
 /* section content */
 .sk-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
-.sk-c{background:rgba(0,20,60,.65);border:1px solid rgba(0,180,255,.1);border-radius:6px;padding:1.1rem;transition:all .25s;backdrop-filter:blur(8px);position:relative;overflow:hidden}
+.sk-c{background:rgba(0,25,70,.5);border:1px solid rgba(0,180,255,.12);border-radius:6px;padding:1.1rem;transition:all .25s;backdrop-filter:blur(8px);position:relative;overflow:hidden}
 .sk-c::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--c1),transparent);transform:scaleX(0);transform-origin:left;transition:transform .4s}
 .sk-c:hover::before{transform:scaleX(1)}
 .sk-c:hover{border-color:rgba(0,200,255,.25);transform:translateY(-3px)}
@@ -274,17 +274,17 @@ body.edit-mode [data-ed]:hover{background:rgba(201,162,39,.07)}
 .exp-da{font-size:9px;color:rgba(0,150,200,.35);font-family:'Orbitron',monospace;margin-bottom:6px}
 .exp-de{font-size:11px;color:rgba(140,200,240,.5);line-height:1.75}
 .cert-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
-.cert-c{background:rgba(0,20,60,.65);border:1px solid rgba(0,180,255,.08);border-radius:8px;padding:.85rem 1rem;display:flex;align-items:center;gap:10px;transition:all .2s}
+.cert-c{background:rgba(0,25,70,.45);border:1px solid rgba(0,180,255,.1);border-radius:8px;padding:.85rem 1rem;display:flex;align-items:center;gap:10px;transition:all .2s}
 .cert-c:hover{border-color:rgba(0,180,255,.25);transform:translateY(-2px)}
 .cert-n{font-size:11px;font-weight:600;color:rgba(200,230,255,.88);line-height:1.3}
 .cert-o{font-size:9px;color:rgba(0,160,200,.4);margin-top:1px;font-family:'Orbitron',monospace}
 .srv-g{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
-.srv-c{background:rgba(0,20,60,.65);border:1px solid rgba(0,180,255,.1);border-radius:10px;padding:1.4rem;transition:all .3s;backdrop-filter:blur(8px)}
+.srv-c{background:rgba(0,25,70,.45);border:1px solid rgba(0,180,255,.12);border-radius:10px;padding:1.4rem;transition:all .3s;backdrop-filter:blur(8px)}
 .srv-c:hover{border-color:rgba(0,200,255,.28);transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,.4)}
 .srv-i{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:.9rem;background:rgba(0,80,200,.1);border:1px solid rgba(0,180,255,.12)}
 .srv-t{font-size:13px;font-weight:700;color:#fff;margin-bottom:.3rem}
 .srv-d{font-size:11px;color:rgba(140,190,240,.45);line-height:1.7}
-.about-w{display:grid;grid-template-columns:150px 1fr;gap:2rem;align-items:start}
+.about-w{display:grid;grid-template-columns:175px 1fr;gap:2rem;align-items:start}
 @media(max-width:520px){.about-w{grid-template-columns:1fr}}
 .about-img{width:140px;height:175px;border-radius:10px;object-fit:cover;object-position:top;border:1px solid rgba(0,180,255,.2);filter:saturate(.8)}
 .about-p{font-size:13px;color:rgba(150,210,240,.65);line-height:1.85;margin-bottom:1rem}
@@ -674,19 +674,25 @@ function toggleEdit(){
   fb.textContent=editOn?'✓ SALIR EDICIÓN':'✎ MODO EDICIÓN';
   fb.classList.toggle('on',editOn);
   sf.style.display=editOn?'block':'none';
+  // about photo overlay
+  const apd=document.getElementById('about-photo-edit');
+  if(apd)apd.style.display=editOn?'flex':'none';
   document.querySelectorAll('[data-ed]').forEach(el=>{
-    if(editOn){el.style.cursor='pointer';el.onclick=function(e){e.stopPropagation();openFieldModal(el.dataset.ed)}}
+    if(editOn){el.style.cursor='pointer';el.onclick=function(ev){ev.stopPropagation();openFieldModal(el.dataset.ed)}}
     else{el.style.cursor='';el.onclick=null}
   });
-  if(editOn)showToast('✎ EDICIÓN ACTIVA — CLICK EN CUALQUIER TEXTO');
+  if(editOn)showToast('✎ EDICIÓN ACTIVA — CLICK EN CUALQUIER TEXTO · CLICK EN FOTO PARA CAMBIARLA');
 }
 
 // ── FIELD EDIT ──
 const fieldLabels={'hero-name':'NOMBRE COMPLETO','hero-role':'ROL / UBICACIÓN',
   'bio-name':'NOMBRE EN PANEL','bio-role':'CARGO EN PANEL',
-  'ct-email-txt':'EMAIL','ct-wa-txt':'WHATSAPP','ct-tel-txt':'TELÉFONO','ct-loc-txt':'UBICACIÓN',
+  'ct-email-txt':'EMAIL (panel contacto)','ct-wa-txt':'WHATSAPP (panel contacto)','ct-tel-txt':'TELÉFONO (panel contacto)','ct-loc-txt':'UBICACIÓN (panel contacto)',
   'sv1':'ESTADÍSTICA 1 (número)','sl1':'ETIQUETA 1','sv2':'ESTADÍSTICA 2','sl2':'ETIQUETA 2',
-  'sv3':'ESTADÍSTICA 3','sl3':'ETIQUETA 3','sv4':'ESTADÍSTICA 4','sl4':'ETIQUETA 4'};
+  'sv3':'ESTADÍSTICA 3','sl3':'ETIQUETA 3','sv4':'ESTADÍSTICA 4','sl4':'ETIQUETA 4',
+  'about-p1':'PÁRRAFO 1 (Sobre mí)','about-p2':'PÁRRAFO 2 (Sobre mí)',
+  'ab-email-txt':'EMAIL (Sobre mí)','ab-wa-txt':'WHATSAPP (Sobre mí)','ab-tel-txt':'TELÉFONO (Sobre mí)','ab-loc-txt':'UBICACIÓN (Sobre mí)',
+  'ab1':'BADGE 1','ab2':'BADGE 2','ab3':'BADGE 3','ab4':'BADGE 4','ab5':'BADGE 5','ab6':'BADGE 6'};
 function openFieldModal(key){
   curField=key;
   const el=document.querySelector(`[data-ed="${key}"]`);
@@ -701,26 +707,35 @@ function saveField(){
   if(el){
     el.textContent=v;
     // update links
-    if(curField==='ct-email-txt')document.getElementById('ct-email').href='mailto:'+v.split(' ')[0];
-    if(curField==='ct-wa-txt'){const n=v.replace(/\D/g,'');document.getElementById('ct-wa').href='https://wa.me/52'+n.slice(-10)}
-    if(curField==='ct-tel-txt')document.getElementById('ct-tel').href='tel:'+v.replace(/\D/g,'');
-    if(curField==='hero-name'){const gl=document.querySelector('.glitch');gl.textContent=v;gl.dataset.t=v;}
+    if(curField==='ct-email-txt'){document.getElementById('ct-email').href='mailto:'+v.split(' ')[0];}
+    if(curField==='ab-email-txt'){document.getElementById('ab-email').href='mailto:'+v.split(' ')[0];}
+    if(curField==='ct-wa-txt'||curField==='ab-wa-txt'){const n=v.replace(/\D/g,'');const href='https://wa.me/52'+n.replace(/\D/g,'').slice(-10);if(curField==='ct-wa-txt')document.getElementById('ct-wa').href=href;else document.getElementById('ab-wa').href=href;}
+    if(curField==='ct-tel-txt'){document.getElementById('ct-tel').href='tel:'+v.replace(/\D/g,'');}
+    if(curField==='ab-tel-txt'){document.getElementById('ab-tel').href='tel:'+v.replace(/\D/g,'');}
+    if(curField==='hero-name'){const gl=document.querySelector('.glitch');if(gl){gl.textContent=v;gl.dataset.t=v;}}
   }
   closeMod('field-modal');showToast('✅ GUARDADO');
 }
 
 // ── PHOTO ──
-function changePhoto(inp){
+function changePhoto(inp){changePhotoAll(inp)}
+function changePhotoAll(inp){
   const f=inp.files[0];if(!f)return;
   const r=new FileReader();
   r.onload=e=>{
-    document.getElementById('bio-photo').src=e.target.result;
-    showToast('📷 FOTO ACTUALIZADA');
+    ['bio-photo','about-photo'].forEach(id=>{const el=document.getElementById(id);if(el)el.src=e.target.result});
+    showToast('📷 FOTO ACTUALIZADA EN TODOS LOS PANELES');
   };
   r.readAsDataURL(f);
 }
-document.querySelector('.bio-photo-wrap').addEventListener('click',function(){
-  if(editOn)document.getElementById('photo-file').click();
+// Bio photo click
+document.querySelector('.bio-photo-wrap').addEventListener('click',function(e){
+  if(editOn){e.stopPropagation();document.getElementById('photo-file').click();}
+});
+// Show/hide about photo edit overlay in edit mode
+const aboutPhotoDiv=document.getElementById('about-photo-edit');
+document.body.addEventListener('editModeChange',()=>{
+  if(aboutPhotoDiv)aboutPhotoDiv.style.display=editOn?'flex':'none';
 });
 
 // ── SAVE HTML ──
