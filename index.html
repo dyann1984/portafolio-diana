@@ -526,6 +526,46 @@ body:not(.edit-mode) .add-proj-btn{display:none}
   .nav-lbl { font-size: 5px !important; }
 }
 
+
+/* SAVE REMINDER BANNER */
+#save-reminder {
+  position: fixed;
+  top: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 300;
+  background: linear-gradient(135deg,rgba(201,162,39,.18),rgba(0,80,200,.12));
+  border: 1px solid rgba(201,162,39,.35);
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: .08em;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(201,162,39,.15);
+}
+#save-reminder:hover { background: rgba(201,162,39,.22); }
+#save-reminder .sr-btn {
+  background: rgba(201,162,39,.2);
+  border: 1px solid rgba(201,162,39,.4);
+  border-radius: 5px;
+  padding: 3px 10px;
+  color: var(--gold);
+  font-family: 'Orbitron', monospace;
+  font-size: 9px;
+  cursor: pointer;
+  letter-spacing: .08em;
+}
+@media(max-width:768px){
+  #save-reminder { font-size: 8px; padding: 7px 12px; top: 50px; max-width: 90vw; }
+}
+
 </style>
 </head>
 <body>
@@ -551,6 +591,12 @@ body:not(.edit-mode) .add-proj-btn{display:none}
     <div class="tb-st">SISTEMA ACTIVO</div>
     <div id="tb-clk"></div>
   </div>
+</div>
+
+<!-- SAVE REMINDER -->
+<div id="save-reminder" onclick="openPin('save')">
+  ⚠️ TIENES CAMBIOS SIN GUARDAR
+  <button class="sr-btn" onclick="openPin('save')">💾 GUARDAR Y DESCARGAR</button>
 </div>
 
 <!-- EDIT BUTTONS -->
@@ -830,9 +876,13 @@ function toggleEdit(){
   fb.classList.toggle('on',editOn);
   sf.style.display=editOn?'block':'none';
   if(editOn){applyEditListeners();showToast('✎ EDICIÓN ACTIVA — CLICK EN CUALQUIER TEXTO O FOTO');}
-  else removeEditListeners();
+  else {removeEditListeners(); document.getElementById('save-reminder').style.display='none';}
   // if a section is open, re-render it to show/hide photo overlay
   if(currentSection)openSec(currentSection);
+}
+function showSaveReminder(){
+  const r=document.getElementById('save-reminder');
+  if(r && editOn) r.style.display='flex';
 }
 
 // ── FIELD EDIT ──
@@ -891,6 +941,12 @@ function saveField(){
   saveState();
   // Update fixed DOM elements
   applyStateToDOM();
+// If photo was saved, apply it to bio panel
+if(globalPhotoSrc && globalPhotoSrc.length > 100){
+  const bp = document.getElementById('bio-photo');
+  if(bp && !bp.src.startsWith('data:')) bp.src = globalPhotoSrc;
+  else if(bp && bp.src !== globalPhotoSrc) bp.src = globalPhotoSrc;
+}
 
 // ── MOBILE DETECTION & ADJUSTMENTS ──
 const isMobile = window.innerWidth <= 768;
@@ -927,12 +983,14 @@ window.addEventListener('resize', ()=>{
     }
     applyEditListeners();
   }
+  saveState();
+  showSaveReminder();
   closeMod('field-modal');
-  showToast('✅ GUARDADO');
+  showToast('✅ CAMBIO GUARDADO — Descarga con 💾 para publicar en Vercel');
 }
 
 // ── PHOTO ──
-let globalPhotoSrc=null;
+let globalPhotoSrc = null;
 function changePhoto(inp){changePhotoAll(inp)}
 function changePhotoAll(inp){
   const f=inp.files[0];if(!f)return;
@@ -1030,10 +1088,14 @@ const STATE = {
   'anuryx-s5-t':'IA & Automatización','anuryx-s5-d':'Implementación de inteligencia artificial y flujos automatizados que optimizan operaciones y reducen costos operativos.',
   'anuryx-s6-t':'Ciberseguridad','anuryx-s6-d':'Protección de datos, auditorías de seguridad y planes de continuidad del negocio para blindar tu infraestructura digital.',
 };
-// Load saved state from localStorage
-const savedState = JSON.parse(localStorage.getItem('dla_state')||'{}');
-Object.assign(STATE, savedState);
-function saveState(){ localStorage.setItem('dla_state', JSON.stringify(STATE)); }
+// SAVED_STATE is injected by saveHtml() — starts empty on first load
+const SAVED_STATE = {};
+Object.assign(STATE, SAVED_STATE);
+// Also check localStorage as secondary fallback
+try{ const ls=JSON.parse(localStorage.getItem('dla_state_v2')||'{}'); Object.assign(STATE,ls); }catch(e){}
+function saveState(){
+  try{ localStorage.setItem('dla_state_v2', JSON.stringify(STATE)); }catch(e){}
+}
 
 // Helper: build editable span
 function ed(key, tag='span'){
@@ -1328,11 +1390,11 @@ function saveProject(){
     chips:document.getElementById('fchips').value.split(',').map(s=>s.trim()).filter(Boolean),
     tc:'rgba(0,40,120,.2)',tb:'rgba(60,120,255,.35)',tt:'rgba(100,160,255,.9)'};
   if(e)projects[idx]=obj;else projects.push(obj);
-  saveP();renderProjects();closeMod('proj-modal');showToast('✅ PROYECTO GUARDADO');
+  saveP();showSaveReminder();renderProjects();closeMod('proj-modal');showToast('✅ PROYECTO GUARDADO — Descarga con 💾 para publicar');
 }
 function delProject(idx){
   if(confirm(`¿Eliminar "${projects[idx].name}"?`)){
-    projects.splice(idx,1);saveP();renderProjects();showToast('🗑 ELIMINADO');
+    projects.splice(idx,1);saveP();renderProjects();showToast('🗑 ELIMINADO — Descarga con 💾 para publicar');
   }
 }
 
